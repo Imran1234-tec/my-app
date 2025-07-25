@@ -10,7 +10,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // Clone repository correctly
-                git url: 'git@github.com:Imran1234-tec/my-app.git'
+                    git credentialsId: 'github-ssh', url: 'git@github.com:Imran1234-tec/my-app.git'
             }
         }
 
