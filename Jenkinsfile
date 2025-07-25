@@ -1,4 +1,3 @@
-## cicd pipeline for jenkins
 pipeline {
     agent any
 
@@ -10,7 +9,9 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'git@github.com:Imran1234-tec/my-app.git'
+                sshagent(['github-ssh']) {
+                    git 'git@github.com:Imran1234-tec/my-app.git'
+                }
             }
         }
 
@@ -32,10 +33,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment successful'
+            echo '✅ Deployment successful'
         }
         failure {
-            echo 'Deployment failed'
+            echo '❌ Deployment failed'
         }
     }
 }
