@@ -9,23 +9,29 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                sh |
-                  git clone 'git@github.com:Imran1234-tec/my-app.git'
-                }
+                // Clone repository correctly
+                git url: 'git@github.com:Imran1234-tec/my-app.git'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'chmod +x build.sh && ./build.sh'
-                sh 'ls -l app.zip || { echo "app.zip not found!"; exit 1; }'
+                script {
+                    sh 'chmod +x build.sh'
+                    sh './build.sh'
+
+                    // Check for the app.zip file existence
+                    if (!fileExists('app.zip')) {
+                        error('app.zip not found!')
+                    }
+                }
             }
         }
 
         stage('Upload to S3') {
             steps {
                 withAWS(region: "${AWS_REGION}", credentials: 'aws-credentials-id') {
-                    sh 'aws s3 cp app.zip s3://${S3_BUCKET}/app-${BUILD_NUMBER}.zip'
+                    sh "aws s3 cp app.zip s3://${S3_BUCKET}/app-${BUILD_NUMBER}.zip"
                 }
             }
         }
