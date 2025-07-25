@@ -9,8 +9,8 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                sshagent(['github-ssh']) {
-                    git 'git@github.com:Imran1234-tec/my-app.git'
+                sh |
+                  git clone 'git@github.com:Imran1234-tec/my-app.git'
                 }
             }
         }
